@@ -1,53 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import HistoryItem from '../historyItem/historyItem';
 import styles from './historyList.module.scss';
+import { useSessionStore } from '@/store/sessionStore';
 
 const HistoryList = () => {
-  const [videos] = useState([
-    { 
-      id: 1, 
-      thumbnail: 'https://picsum.photos/640/360', 
-      prompt: '帮我生成一个穿着汉服在竹林漫步的女孩视频，帮我生成一个穿着汉服在竹林漫步的女孩视频，帮我生成一个穿着汉服在竹林漫步的女孩视频，帮我生成一个穿着汉服在竹林漫步的女孩视频，帮我生成一个穿着汉服在竹林漫步的女孩视频', 
-      videoUrl: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', 
-      loading: false, 
-      progress: 100,
-      timestamp: '03-31 11:21'
-    },
-    { 
-      id: 2, 
-      thumbnail: 'https://picsum.photos/640/360?random=1', 
-      prompt: '生成一个女孩在海边奔跑的视频，要有夕阳的感觉', 
-      videoUrl: '', 
-      loading: true, 
-      progress: 75,
-      timestamp: '03-31 11:23'
-    },
-    { 
-      id: 3, 
-      thumbnail: 'https://picsum.photos/640/360?random=2', 
-      prompt: '帮我生成一个女孩在咖啡厅看书的视频，要有文艺气息', 
-      videoUrl: '', 
-      loading: true, 
-      progress: 45,
-      timestamp: '03-31 11:24'
-    },
-    { 
-      id: 4, 
-      thumbnail: 'https://picsum.photos/640/360?random=3', 
-      prompt: '生成一个女孩在雨中撑伞漫步的视频，要有意境美', 
-      videoUrl: '', 
-      loading: true, 
-      progress: 15,
-      timestamp: '03-31 11:25'
-    },
-  ]);
+  const { videoTasks, setScrollToBottom } = useSessionStore();
+  const videos = Array.from(videoTasks.values());
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 注册滚动到底部的回调
+    setScrollToBottom(() => {
+      if (containerRef.current) {
+        setTimeout(() => {
+          containerRef.current?.scrollTo({
+            top: containerRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        }, 100); // 给一点延迟确保新内容已渲染
+      }
+    });
+  }, [setScrollToBottom]);
+
+  useEffect(() => {
+    // 每5秒调用一次 fetchVideoData
+    const interval = setInterval(() => {
+      useSessionStore.getState().fetchVideoData();
+    }, 5000);
+
+    // 组件卸载时清理定时器
+    return () => clearInterval(interval);
+  }, []); // 空依赖数组，因为 getState() 总是获取最新的 store 状态
 
   return (
-    <div className={styles.container}>
+    <div ref={containerRef} className={styles.container}>
       {videos.map((video) => (
-        <HistoryItem key={video.id} {...video} />
+        <HistoryItem key={video.taskId} {...video} />
       ))}
     </div>
   );

@@ -10,9 +10,9 @@
   gap: 16px;
   padding: 24px;
   margin: 16px 16px 16px 0;
-  background: var(--ant-color-bg-container);
-  border: 1px solid var(--ant-color-border);
-  border-radius: var(--ant-border-radius);
+  background: #1f1f1f;
+  border: 1px solid #303030;
+  border-radius: 8px;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -22,16 +22,16 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--ant-color-bg-container);
+    background: #1f1f1f;
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: var(--ant-color-border);
+    background: #303030;
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: var(--ant-color-border-secondary);
+    background: #434343;
   }
 }

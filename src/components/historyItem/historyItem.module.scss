@@ -59,7 +59,7 @@
 .videoContainer {
   width: 100%;
   position: relative;
-  padding-top: 56.25%;
+  padding-top: 56.25%; /* 16:9 宽高比 */
   flex-shrink: 0;
 }
 
@@ -95,7 +95,49 @@
 }
 
 .video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.imageContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  overflow: hidden;
+}
+
+.image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.statusOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.statusText {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
 }
