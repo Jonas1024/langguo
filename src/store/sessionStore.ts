@@ -1,11 +1,13 @@
 import { create } from "zustand/react";
 import { persist } from "zustand/middleware";
-import { VideoTaskData } from "@/types/types";
-import { getVideoById } from "@/services/generateVideo";
+import { VideoTaskData, ReferenceImages } from "@/types/types";
+import { getVideoById, queryReferImages } from "@/services/generateVideo";
 
 interface StoreState {
   videoTasks: Map<string, VideoTaskData>;
   onScrollToBottom?: () => void;
+  referenceImages: ReferenceImages;
+  videoPrompt: string[];
 }
 
 interface StoreActions {
@@ -13,11 +15,15 @@ interface StoreActions {
   removeTaskId: (taskId: string) => void;
   fetchVideoData: () => Promise<void>;
   setScrollToBottom: (callback: () => void) => void;
+  setReferenceImages: (images: ReferenceImages) => void;
+  fetchReferenceImages: () => Promise<void>;
 }
 
 const DEFAULT_STATE: StoreState = {
   videoTasks: new Map(),
   onScrollToBottom: undefined,
+  referenceImages: {},
+  videoPrompt: ["广告视频", "产品视频", "产品介绍视频", "产品使用视频", "产品展示视频", "产品宣传视频", "产品推广视频", "产品营销视频", "产品销售视频", "产品介绍视频", "产品展示视频", "产品宣传视频", "产品推广视频", "产品营销视频", "产品销售视频"],
 };
 
 export const useSessionStore = create<StoreState & StoreActions>()(
@@ -25,11 +31,12 @@ export const useSessionStore = create<StoreState & StoreActions>()(
     (set) => ({
       ...DEFAULT_STATE,
       addTaskId: async (taskId: string) => {
+        console.log('taskId: ', taskId);
         set((state) => {
           const newMap = new Map(state.videoTasks);
           newMap.set(taskId, {
             taskId,
-            status: 'CANCELLED',
+            status: 'CREATED',
             images: [],
             videos: []
           });
@@ -93,6 +100,19 @@ export const useSessionStore = create<StoreState & StoreActions>()(
       },
       setScrollToBottom: (callback: () => void) => {
         set({ onScrollToBottom: callback });
+      },
+      setReferenceImages: (images: ReferenceImages) => {
+        set({ referenceImages: images });
+      },
+      fetchReferenceImages: async () => {
+        try {
+          const response = await queryReferImages();
+          if (response.code === 200) {
+            set({ referenceImages: response.data });
+          }
+        } catch (error) {
+          console.error('Failed to fetch reference images:', error);
+        }
       },
     }),
     {

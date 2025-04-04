@@ -1,7 +1,7 @@
-
 export interface Text2VideoParams {
   productImage: string;
   referImage: string;
+  prompt: string;
 }
 
 export interface Text2VideoReq {
@@ -37,4 +37,18 @@ export interface GetVideoByIdRes {
   message: string;
   data: VideoTaskData;
   requestId: string;
+}
+
+export interface ReferenceImage {
+  url: string;
+}
+
+export interface ReferenceImages {
+  [key: string]: ReferenceImage[];
+}
+
+export interface QueryReferImagesRes {
+  code: number;
+  message: string;
+  data: ReferenceImages;
 }

@@ -54,7 +54,7 @@ const HistoryItem: React.FC<VideoTaskData> = ({ status, videos, params }) => {
           <div className={styles.titleRow}>
             <Text className={styles.title} style={{ color: token.colorText }}>驰电-视频生成</Text>
           </div>
-          <Text className={styles.prompt} style={{ color: token.colorTextSecondary }}>驰电-视频生成</Text>
+          <Text className={styles.prompt} style={{ color: token.colorTextSecondary }}>{params?.prompt ?? "围绕主体，自然运镜"}</Text>
         </div>
         {params?.productImage && (
           <Image 

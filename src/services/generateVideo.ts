@@ -1,4 +1,4 @@
-import { GetVideoByIdRes, Text2VideoReq, Text2VideoRes } from "@/types/types";
+import { GetVideoByIdRes, Text2VideoReq, Text2VideoRes, QueryReferImagesRes } from "@/types/types";
 import { request } from "@/utils/request";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
@@ -29,5 +29,17 @@ export const useGetVideoById = (id: string | null, enabled: boolean = true) => {
         gcTime: 0,
         refetchInterval: enabled ? 2000 : false,
         enabled: !!id && enabled,
+    });
+}
+
+export const queryReferImages = async (): Promise<QueryReferImagesRes> => {
+    const response = await request.get('/api/ai/agent/queryReferImages');
+    return response.data;
+}
+
+export const useQueryReferImages = () => {
+    return useQuery({
+        queryKey: ["queryReferImages"],
+        queryFn: queryReferImages,
     });
 }
